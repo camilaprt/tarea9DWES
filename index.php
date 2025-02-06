@@ -13,7 +13,6 @@
   </head>
   <body>
     <h2>Bibiotecas de Madrid</h2>
-    <h2>Edificios de carácter monumental del Ayto. de Madrid</h2>
 
     <div class="container mt-5">
       <div class="row">
@@ -35,20 +34,24 @@
               <?php
                 $url = "https://datos.madrid.es/egob/catalogo/201747-0-bibliobuses-bibliotecas.json";
                 $result = file_get_contents($url);
+                //Convierte json en un array asociativo con parametro 'true'
                 $datos = json_decode($result,true);
-                var_dump($datos);
-
-                                   
-              ?>
-              <tr>
-                <th scope="row"><?=$dato["id"]?></th>
-
-                <td><?=$dato["title"]?></td>
-
+                //Extraer datos que necesitamos
+                foreach($datos["@graph"] as $dato)
+                {
+                  $exploded = explode("/",$dato["address"]["area"]["@id"]);
+                  $barrio = end($exploded);
+              ?>  
+               <tr> 
+                <th scope="row"><?=$dato["id"] ?></th>  
+                <td><?=$dato["title"] ?></td>
                 <td><?=$barrio?></td>
-
                 <td><?=$dato["address"]["street-address"]?></td>
-              </tr>
+               </tr> 
+
+               <?php     
+                }
+                ?>  
             </tbody>
           </table>
         </div>
